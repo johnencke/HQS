@@ -7,7 +7,7 @@ from pynput.mouse import Listener
 from PIL import Image
 from PyQt5 import QtWidgets, QtCore, QtGui
 import time
-import queue
+import Queue as queue
 import win32api, win32con, win32gui
 
 
