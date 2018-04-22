@@ -11,7 +11,7 @@ import tkinter as tk
 from PIL import ImageGrab
 import numpy as np
 import cv2
-import QuestionParser as ques
+import questionParser
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -61,7 +61,7 @@ class MyWidget(QtWidgets.QWidget):
 #        cv2.imshow('Captured Image', img)
 #        cv2.waitKey(0)
         cv2.destroyAllWindows()
-        ques.parseText(img)
+        questionParser.parseText(img)
 
 
 if __name__ == '__main__':
