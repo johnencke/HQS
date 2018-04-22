@@ -17,6 +17,7 @@ Then, the program will use Google to find the answer that is most associated
 with the question and output that answer to the user.
 
 Python Packages:
+
 Pytesseract for optical character recognition
 
 BeautifulSoup for web scraping
@@ -27,6 +28,7 @@ Pyscreenshot for capturing the screen
 
 
 Resources:
+
 https://www.geeksforgeeks.org/performing-google-search-using-python-code/
 
 https://www.pyimagesearch.com/2017/07/10/using-tesseract-ocr-python/
