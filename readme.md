@@ -1,8 +1,8 @@
-#Project: HQ Trivia Solver
+# Project: HQ Trivia Solver
 
-##Team Members: Andrew Altadonna, John Encke, Robert Salewski, Joshua Smith
+## Team Members: Andrew Altadonna, John Encke, Robert Salewski, Joshua Smith
 
-######Github Link: https://github.com/johnencke/HQS
+###### Github Link: https://github.com/johnencke/HQS
 
 **Scope:**
 
