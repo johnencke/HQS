@@ -1,10 +1,11 @@
-Project: HQ Trivia Solver
+#Project: HQ Trivia Solver
 
-Team Members: Andrew Altadonna, John Encke, Robert Salewski, Joshua Smith
+##Team Members: Andrew Altadonna, John Encke, Robert Salewski, Joshua Smith
 
-Github Link: https://github.com/johnencke/HQS
+######Github Link: https://github.com/johnencke/HQS
 
-Scope:
+**Scope:**
+
 This project will use Python to win the popular HQ Trivia app. 
 In the game, the player only has 10 seconds to answer a multiple choice 
 question. It is very difficult for the player to research the answer on 
@@ -16,7 +17,8 @@ The question will be parsed to take out any extraneous words.
 Then, the program will use Google to find the answer that is most associated 
 with the question and output that answer to the user.
 
-Python Packages:
+
+**Python Packages:**
 
 Pytesseract for optical character recognition
 
@@ -27,7 +29,8 @@ Google for googling
 Pyscreenshot for capturing the screen
 
 
-Resources:
+
+**Resources:**
 
 https://www.geeksforgeeks.org/performing-google-search-using-python-code/
 
