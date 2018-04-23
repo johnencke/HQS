@@ -11,12 +11,12 @@ from PIL import ImageGrab
 import numpy as np
 import cv2
 import questionParser
-import googleSearch
+import googleSearch as gs
 
 my_api_key = "AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ"
 my_cse_id = "015426465276113101398:etj8c0m8u_u"
 
-class MyWidget(QtWidgets.QWidget):
+class ScreenCapWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         root = tk.Tk()
@@ -51,7 +51,6 @@ class MyWidget(QtWidgets.QWidget):
 
     def mouseReleaseEvent(self, event):
         self.close()
-
         x1 = min(self.begin.x(), self.end.x())
         y1 = min(self.begin.y(), self.end.y())
         x2 = max(self.begin.x(), self.end.x())
@@ -61,26 +60,13 @@ class MyWidget(QtWidgets.QWidget):
         img.save('capture.png')
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
 
-#        cv2.imshow('Captured Image', img)
-#        cv2.waitKey(0)
-
-        cv2.destroyAllWindows()
         q = questionParser.QuestionParser(img)
         print(q)
 
 
-        url = 'https://www.google.com/search?q=heyyy what does that mean'
-        query = 'heyyy what does that mean'
-
-        API_RESULT = googleSearch.googleAPITotalResults(query, my_api_key, my_cse_id)
-        WEBPAGE_RESULT = googleSearch.getTotalResults(url)
-
-        print (API_RESULT)
-        print (WEBPAGE_RESULT)
-
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    window = MyWidget()
+    window = ScreenCapWidget()
     window.show()
     app.aboutToQuit.connect(app.deleteLater)
     sys.exit(app.exec_())
