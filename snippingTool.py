@@ -63,8 +63,6 @@ class ScreenCapWidget(QtWidgets.QWidget):
         q = questionParser.QuestionParser(img)
         print(q)
 
-        gs.
-
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = ScreenCapWidget()
