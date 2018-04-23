@@ -39,7 +39,7 @@ class QuestionParser:
 					if splitText[i] != '' and self.question != '':
 						self.answers.append(splitText[i])
 		
-		while (len(self.answers)<=3):
+		while (len(self.answers) < 3):
 			self.answers.append("Read Error")
 
 	def __str__(self):
