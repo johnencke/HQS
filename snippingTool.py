@@ -61,7 +61,8 @@ class MyWidget(QtWidgets.QWidget):
 #        cv2.imshow('Captured Image', img)
 #        cv2.waitKey(0)
         cv2.destroyAllWindows()
-        questionParser.parseText(img)
+        q = questionParser.QuestionParser(img)
+        print(q)
 
 
 if __name__ == '__main__':
