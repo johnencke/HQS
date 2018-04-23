@@ -12,6 +12,7 @@ import numpy as np
 import cv2
 import questionParser
 import googleSearch as gs
+from datetime import datetime
 
 my_api_key = "AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ"
 my_cse_id = "015426465276113101398:etj8c0m8u_u"
@@ -61,7 +62,13 @@ class ScreenCapWidget(QtWidgets.QWidget):
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
 
         q = questionParser.QuestionParser(img)
+        startTime = datetime.now()
         print(q)
+        print(datetime.now() - startTime, '\n')
+        gs.getResultsAlg(q)
+        print(datetime.now() - startTime, '\n')
+        gs.googleAPIResultsAlg(q)
+        print(datetime.now() - startTime, '\n')
 
 
 if __name__ == '__main__':
