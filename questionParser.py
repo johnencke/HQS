@@ -67,6 +67,6 @@ class QuestionParser:
 		return text
 
 if __name__ == "__main__":
-	parseMe = QuestionParser(Image.open('hq6.png'))
+	parseMe = QuestionParser(Image.open('hq5.png'))
 	print(parseMe.unformattedQuestion)
 	print(parseMe.unformattedAnswers)
