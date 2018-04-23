@@ -74,7 +74,7 @@ class MyWidget(QtWidgets.QWidget):
 
         API_RESULT = googleSearch.googleAPITotalResults(query, my_api_key, my_cse_id)
         WEBPAGE_RESULT = googleSearch.getTotalResults(url)
-        
+
         print (API_RESULT)
         print (WEBPAGE_RESULT)
 
