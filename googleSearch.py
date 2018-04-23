@@ -28,11 +28,11 @@ def getTotalResults(url):
 
 def googleAPIResultsAlg(qp:QuestionParser):
 	for i in range(0,3):
-		print('Answer', i+1, "Results: ", googleAPITotalResults(qp.unformattedQuestion + qp.unformattedAnswers[i]))
+		print('Answer', i+1, "Results: ", googleAPITotalResults(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i]))
 
 def getResultsAlg(qp:QuestionParser):
 	for i in range(0,3):
-		print('Answer', i+1, "Results: ", getTotalResults(makeURL(qp.unformattedQuestion + qp.unformattedAnswers[i])))
+		print('Answer', i+1, "Results: ", getTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
 
 
 if __name__ == "__main__":
@@ -41,10 +41,12 @@ if __name__ == "__main__":
 	print(qp)
 	print(datetime.now() - startTime, '\n')
 
+	print ("Parsing HTML")
 	startTime = datetime.now()
 	getResultsAlg(qp)
 	print(datetime.now() - startTime, '\n')
 	
-	startTime = datetime.now()
-	googleAPIResultsAlg(qp)
-	print(datetime.now() - startTime, '\n')
+	# print ("Google API Search")
+	# startTime = datetime.now()
+	# googleAPIResultsAlg(qp)
+	# print(datetime.now() - startTime, '\n')
