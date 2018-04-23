@@ -12,6 +12,7 @@ from PIL import ImageGrab
 import numpy as np
 import cv2
 import questionParser
+import googleSearch
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -63,6 +64,7 @@ class MyWidget(QtWidgets.QWidget):
         cv2.destroyAllWindows()
         q = questionParser.QuestionParser(img)
         print(q)
+        googleSearch.makeQuery(q)
 
 
 if __name__ == '__main__':
