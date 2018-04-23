@@ -13,10 +13,13 @@ def makeURL(search_term):
 	return 'https://www.google.com/search?q=' + search_term
 
 def googleAPITotalResults(search_term, api_key = my_api_key, cse_id = my_cse_id):
-	service = build("customsearch", "v1", developerKey=api_key)
-	response = service.cse().list(q=search_term, cx=cse_id).execute()
-	totalResults = response['searchInformation']['totalResults']
-	return totalResults
+	try:
+		service = build("customsearch", "v1", developerKey=api_key)
+		response = service.cse().list(q=search_term, cx=cse_id).execute()
+		totalResults = response['searchInformation']['totalResults']
+		return totalResults
+	except:
+		return None
 
 
 def getTotalResults(url):
@@ -46,7 +49,7 @@ if __name__ == "__main__":
 	getResultsAlg(qp)
 	print(datetime.now() - startTime, '\n')
 	
-	# print ("Google API Search")
-	# startTime = datetime.now()
-	# googleAPIResultsAlg(qp)
-	# print(datetime.now() - startTime, '\n')
+	print ("Google API Search")
+	startTime = datetime.now()
+	googleAPIResultsAlg(qp)
+	print(datetime.now() - startTime, '\n')
