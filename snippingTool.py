@@ -9,10 +9,12 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 import tkinter as tk
 from PIL import ImageGrab
+from PIL import Image
 import numpy as np
 import cv2
 import questionParser
 import googleSearch
+import webbrowser
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -62,10 +64,15 @@ class MyWidget(QtWidgets.QWidget):
 #        cv2.imshow('Captured Image', img)
 #        cv2.waitKey(0)
         cv2.destroyAllWindows()
-        q = questionParser.QuestionParser(img)
+        q = questionParser.QuestionParser(Image.open("hq6.png"))
         print(q)
-        googleSearch.makeQuery(q)
-
+        #googleSearch.makeQuery(q)
+        newQ = q.question
+        newQ = "+".join(newQ.split())
+        newQ = newQ.replace("?", "")
+        newQ = newQ.lower()
+        print(newQ)
+        webbrowser.open("http://google.com/search?q=" + newQ)
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
