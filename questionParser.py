@@ -2,7 +2,7 @@ import os
 import sys
 import pytesseract
 from PIL import Image
-import time
+import string
 
 class QuestionParser:
 	'''Question Parser Object'''
@@ -12,6 +12,8 @@ class QuestionParser:
 		'''
 		self.question = ''
 		self.answers = []
+		self.unformattedQuestion = ''
+		self.unformattedAnswers = ["", "", ""]
 		self.__parseText(im)
 
 	def __parseText(self, im:Image):
@@ -41,6 +43,13 @@ class QuestionParser:
 		
 		while (len(self.answers) < 3):
 			self.answers.append("Read Error")
+		#Converts questions and answers to lowercase and removes punctuation
+		self.unformattedQuestion = self.question.lower().translate(str.maketrans(string.punctuation,"|"*len(string.punctuation)))
+		self.unformattedQuestion = self.unformattedQuestion.replace('|', '')
+
+		for i in range(0,3):
+			self.unformattedAnswers[i] = self.answers[i].lower().translate(str.maketrans(string.punctuation,"|"*len(string.punctuation)))
+			self.unformattedAnswers[i] = self.unformattedAnswers[i].replace('|', '')
 
 	def __str__(self):
 		'''To String method that prints the question and the three answers'''
@@ -57,3 +66,7 @@ class QuestionParser:
 		text = text.replace(u"\u2019", "\'")
 		return text
 
+if __name__ == "__main__":
+	parseMe = QuestionParser(Image.open('hq6.png'))
+	print(parseMe.unformattedQuestion)
+	print(parseMe.unformattedAnswers)
