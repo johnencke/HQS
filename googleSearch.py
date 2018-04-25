@@ -25,10 +25,8 @@ Using HTML parsing, it returns number of results that the search yields
 def htmlParseTotalResults(url):
 	response = requests.get(url)
 	html = BeautifulSoup(response.text, 'lxml')
-	html_resultStats = html.find('div', id='resultStats')
-	#totalResults = int(html_resultStats.prettify().split('\n')[1].split(' ')[2].replace(',', ''))
-
-	return html_resultStats
+	resultStatsString = html.find('div', id='resultStats').string
+	return resultStatsString
 
 def printHtmlParseResults(qp:QuestionParser):
 	for i in range(0,3):
@@ -52,14 +50,14 @@ def printGoogleAPIResults(qp:QuestionParser):
 
 
 def getFrequency(response):
-	return response['items'][0]
+	return response['items'][0]['snippet']
 	
 
 
 
 if __name__ == "__main__":
 	startTime = datetime.now()
-	qp = QuestionParser(Image.open('Capture.png'))
+	qp = QuestionParser(Image.open('exampleQuestions\hq1.png'))
 	print(qp.unformattedQuestion)
 	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
@@ -69,7 +67,7 @@ if __name__ == "__main__":
 	printHtmlParseResults(qp)
 	print(datetime.now() - startTime, '\n')
 	
-	print ("Google API Search")
-	startTime = datetime.now()
-	printGoogleAPIResults(qp)
-	print(datetime.now() - startTime, '\n')
+	# print ("Google API Search")
+	# startTime = datetime.now()
+	# printGoogleAPIResults(qp)
+	# print(datetime.now() - startTime, '\n')
