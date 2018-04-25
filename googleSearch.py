@@ -26,8 +26,8 @@ def getTotalResults(url):
 	response = requests.get(url)
 	html = BeautifulSoup(response.text, 'lxml')
 	html_resultStats = html.find('div', id='resultStats')
-	totalResults = int(html_resultStats.prettify().split('\n')[1].split(' ')[2].replace(',', ''))
-	return totalResults
+	#totalResults = int(html_resultStats.prettify().split('\n')[1].split(' ')[2].replace(',', ''))
+	return html_resultStats
 
 def googleAPIResultsAlg(qp:QuestionParser):
 	for i in range(0,3):
@@ -40,8 +40,10 @@ def getResultsAlg(qp:QuestionParser):
 
 if __name__ == "__main__":
 	startTime = datetime.now()
-	qp = QuestionParser(Image.open('hq5.png'))
+	qp = QuestionParser(Image.open('./exampleQuestions/hq11.png'))
 	print(qp)
+	print(qp.unformattedQuestion)
+	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
 
 	print ("Parsing HTML")
