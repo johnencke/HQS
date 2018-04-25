@@ -9,49 +9,64 @@ from datetime import datetime
 my_api_key = "AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ"
 my_cse_id = "015426465276113101398:etj8c0m8u_u"  	
 
+"""
+Generates and returns URL based on the search query
+"""
 def makeURL(search_term):
 	return 'https://www.google.com/search?q=' + search_term
 
-def googleAPITotalResults(search_term, api_key = my_api_key, cse_id = my_cse_id):
-	try:
-		service = build("customsearch", "v1", developerKey=api_key)
-		response = service.cse().list(q=search_term, cx=cse_id).execute()
-		totalResults = response['searchInformation']['totalResults']
-		return totalResults
-	except:
-		return None
 
-
-def getTotalResults(url):
+"""
+Using HTML parsing, it returns number of results that the search yields
+"""
+def htmlParseTotalResults(url):
 	response = requests.get(url)
 	html = BeautifulSoup(response.text, 'lxml')
 	html_resultStats = html.find('div', id='resultStats')
 	#totalResults = int(html_resultStats.prettify().split('\n')[1].split(' ')[2].replace(',', ''))
+
 	return html_resultStats
 
-def googleAPIResultsAlg(qp:QuestionParser):
+def printHtmlParseResults(qp:QuestionParser):
 	for i in range(0,3):
-		print('Answer', i+1, "Results: ", googleAPITotalResults(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i]))
+		print('Answer', i + 1, "Results: ", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
 
-def getResultsAlg(qp:QuestionParser):
+
+"""
+Using Google's Custom Search API, it returns the number of results that each search yields
+"""
+def googleAPITotalResults(search_term, api_key = my_api_key, cse_id = my_cse_id):
+	service = build("customsearch", "v1", developerKey=api_key)
+	response = service.cse().list(q=search_term, cx=cse_id).execute()
+	totalResults = response['searchInformation']['totalResults']
+	return totalResults, response
+
+def printGoogleAPIResults(qp:QuestionParser):
 	for i in range(0,3):
-		print('Answer', i+1, "Results: ", getTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
+		results, response = googleAPITotalResults(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])
+		frequency = getFrequency(response)
+		print('Answer', i + 1, "Results: ", results, "Frequency: ", frequency)	
+
+
+def getFrequency(response):
+	return response['items'][0]
+	
+
 
 
 if __name__ == "__main__":
 	startTime = datetime.now()
-	qp = QuestionParser(Image.open('./exampleQuestions/hq11.png'))
-	print(qp)
+	qp = QuestionParser(Image.open('Capture.png'))
 	print(qp.unformattedQuestion)
 	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
 
 	print ("Parsing HTML")
 	startTime = datetime.now()
-	getResultsAlg(qp)
+	printHtmlParseResults(qp)
 	print(datetime.now() - startTime, '\n')
 	
 	print ("Google API Search")
 	startTime = datetime.now()
-	googleAPIResultsAlg(qp)
+	printGoogleAPIResults(qp)
 	print(datetime.now() - startTime, '\n')
