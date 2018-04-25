@@ -9,6 +9,9 @@ from datetime import datetime
 my_api_key = "AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ"
 my_cse_id = "015426465276113101398:etj8c0m8u_u"  	
 
+my_api_key2 = "AIzaSyAxBsoRzCvsv0mXlsHX7Pw846KWxpNqx4g"
+my_cse_id2 = "002815009267709723541:nkrdgvsmczu"
+
 """
 Generates and returns URL based on the search query
 """
