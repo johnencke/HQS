@@ -13,9 +13,22 @@ import cv2
 import questionParser
 import googleSearch as gs
 from datetime import datetime
+import threading
+import time
 
 my_api_key = "AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ"
 my_cse_id = "015426465276113101398:etj8c0m8u_u"
+
+class HqThread(threading.Thread):
+    def __init__(self, q:questionParser.QuestionParser, func , startTime):
+        threading.Thread.__init__(self)
+        self.q = q
+        self.func = func
+        self.startTime = startTime
+    def run(self):
+        self.func(self.q)
+        print(datetime.now() - self.startTime, '\n')
+
 
 class ScreenCapWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -62,13 +75,23 @@ class ScreenCapWidget(QtWidgets.QWidget):
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
 
         q = questionParser.QuestionParser(img)
-        startTime = datetime.now()
-        print(q)
-        print(datetime.now() - startTime, '\n')
-        gs.getResultsAlg(q)
-        print(datetime.now() - startTime, '\n')
-        gs.googleAPIResultsAlg(q)
-        print(datetime.now() - startTime, '\n')
+        if q.answers[2] != "Read Error":
+            startTime = datetime.now()
+            print(q, '\n')
+            gs.getResultsAlg(q)
+            print(datetime.now() - startTime, '\n')
+            startTime = datetime.now()
+            gs.googleAPIResultsAlg(q)
+            print(datetime.now() - startTime, '\n')
+
+
+        #Threading can be useful for executing all algorithms concurrently
+        # t1 = HqThread(q, gs.getResultsAlg, startTime)
+        # t2 = HqThread(q, gs.googleAPIResultsAlg, startTime)
+        # t1.start()
+        # t2.start()
+        # t1.join()
+        # t2.join()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
