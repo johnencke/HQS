@@ -21,7 +21,8 @@ my_cse_id4 = "002815009267709723541:epubpgzcgog"
 
 EXCLUDE_THESE = ["who", "what","where","when","of","and","that","have","for","why","the","on","with","as",
 "this","by","from","they","a","an","and","my","are","in","to","these","is","does","which","his","her","also",
-"have","it","we","means","you","comes","came","come","about","if","by","from","go", 'usually']
+"have", "it", "we", "means", "you", "comes", "came", "come", "about","if","by","from","go", 'usually', 'not', 
+"isn't", "won't", "considered", "would", "be", "consider", 'has', 'was', 'did', 'massive']
 
 
 class HqThread(threading.Thread):
@@ -52,6 +53,7 @@ def htmlParseTotalResults(url):
 
 def printHtmlParseResults(qp:QuestionParser):
 	newSearch = removeCommonWords(qp.unformattedQuestion)
+	print ("new search:", newSearch)
 	results =  []
 	for i in range(0,3):
 		results += [htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))]
@@ -61,11 +63,12 @@ def printHtmlParseResults(qp:QuestionParser):
 	resultsDict = {}
 	for i in range(0, 3):
 		resultsDict[qp.answers[i]] = results[i]
-
-	if 'not' in newSearch:
+	if 'not' in qp.unformattedQuestion:
 		print ('Recommended Answer: ' + min(resultsDict.items(), key=operator.itemgetter(1))[0])
 	else:
 		print ('Recommended Answer: ' + max(resultsDict.items(), key=operator.itemgetter(1))[0])
+
+	# openWindow(newSearch)
 
 
 
@@ -140,5 +143,4 @@ if __name__ == "__main__":
 	# printGoogleAPIResults(qp)
 	# print(datetime.now() - startTime, '\n')
 
-	# openWindow(qp.unformattedQuestion)
 
