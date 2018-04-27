@@ -116,9 +116,7 @@ if __name__ == "__main__":
 	file = input('File: ')
 	startTime = datetime.now()
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
-	print('\nQuestion:\n' + qp.question)
-	print()
-	for answer in qp.answers: print(answer)
+	print(qp)
 
 	print('------\n', (datetime.now() - startTime), '\n------')
 
