@@ -5,6 +5,7 @@ from questionParser import QuestionParser
 from PIL import Image
 import webbrowser
 from datetime import datetime
+import operator
 
 my_api_key = 'AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ'
 my_cse_id = '015426465276113101398:etj8c0m8u_u' 	
@@ -79,18 +80,29 @@ def printGoogleAPIResults(qp:QuestionParser):
 		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequencyAnswer, "Frequency of Question Keywords in Answer: ", frequencyQuestion)
 
 def removeCommonWords(statement):
-	statement = statement[:-1]
-	statement = statement.lower().split()
+	# statement = statement[:-1]
+	statement = statement.split()
 	keywords = []
 	for i in range(0, len(statement)):
 		if statement[i] not in EXCLUDE_THESE: 
 			keywords += [statement[i]]
-	return keywords
+	return ' '.join(keywords)
 
 
 def openWindow(newQ):
 	webbrowser.open("http://google.com/search?q=" + newQ)
 
+def getAnswer(qp:QuestionParser):
+	resultsDict = {}
+	print (qp.question)
+	print (qp.unformattedQuestion)
+	qp.unformattedQuestion = removeCommonWords(qp.question)
+	print (qp.unformattedQuestion)
+
+	for i in range(0, 3):
+		resultsDict[qp.unformattedAnswers[i]] = htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i]))
+	answer = (max(resultsDict.items(), key=operator.itemgetter(1))[0])
+	return answer
 
 if __name__ == "__main__":
 	startTime = datetime.now()
@@ -100,12 +112,14 @@ if __name__ == "__main__":
 	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
 
-	print(removeCommonWords(qp.question))
-	print ("Parsing HTML")
-	startTime = datetime.now()
-	printHtmlParseResults(qp)
-	print(datetime.now() - startTime, '\n')
-	
+	print(removeCommonWords(qp.unformattedQuestion))
+
+	# print ("Parsing HTML")
+	# startTime = datetime.now()
+	# printHtmlParseResults(qp)
+	# print(datetime.now() - startTime, '\n')
+	# getAnswer(qp)
+
 	# print ("Google API Search")
 	# startTime = datetime.now()
 	# printGoogleAPIResults(qp)
