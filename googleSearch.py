@@ -125,8 +125,6 @@ if __name__ == "__main__":
 	print ("Parsing HTML")
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
-	print(datetime.now() - startTime, '\n')
-	startTime = datetime.now()
 	print("Recommended Answer: " + getAnswer(qp))
 	print(datetime.now() - startTime, '\n')
 
