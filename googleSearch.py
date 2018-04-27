@@ -81,7 +81,7 @@ def printGoogleAPIResults(qp:QuestionParser):
 def removeCommonWords(statement):
 	statement = statement[:-1]
 	statement = statement.lower().split()
-	resultWords = []
+	keywords = []
 	for i in range(0, len(statement)):
 		if statement[i] not in EXCLUDE_THESE: 
 			keywords += [statement[i]]
