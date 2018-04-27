@@ -5,6 +5,7 @@ from questionParser import QuestionParser
 from PIL import Image
 import webbrowser
 from datetime import datetime
+import operator
 
 my_api_key = 'AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ'
 my_cse_id = '015426465276113101398:etj8c0m8u_u' 	
@@ -45,12 +46,12 @@ Using HTML parsing, it returns number of results that the search yields
 def htmlParseTotalResults(url):
 	response = requests.get(url)
 	html = BeautifulSoup(response.text, 'lxml')
-	resultStatsString = html.find('div', id='resultStats').string
+	resultStatsString = int(html.find('div', id='resultStats').string.replace(',', '').replace('About ', '').replace(' results', ''))
 	return resultStatsString
 
 def printHtmlParseResults(qp:QuestionParser):
 	for i in range(0,3):
-		print('Answer', i + 1, "Results: ", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
+		print('Answer', i + 1, "Results:", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
 
 
 '''
@@ -95,32 +96,40 @@ def removeCommonWords(statement:str):
 	for i in range(0, len(statement)):
 		if statement[i] not in EXCLUDE_THESE: 
 			keywords += [statement[i]]
-	return keywords
+	return ' '.join(keywords)
 
 
 def openWindow(newQ):
 	webbrowser.open("http://google.com/search?q=" + newQ)
 
+def getAnswer(qp:QuestionParser):
+	resultsDict = {}
+	newSearch = removeCommonWords(qp.unformattedQuestion)
+	for i in range(0, 3):
+		resultsDict[qp.unformattedAnswers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
+	answer = (max(resultsDict.items(), key=operator.itemgetter(1))[0])
+	return answer
 
 if __name__ == "__main__":
 	file = input('File: ')
 	startTime = datetime.now()
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
-	print(qp.unformattedQuestion)
-	print(qp.unformattedAnswers)
+	print('\nQuestion:' + qp.question)
+	for answer in qp.answers: print(answer)
 	print(datetime.now() - startTime, '\n')
+
 
 
 	print ("Parsing HTML")
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
 	print(datetime.now() - startTime, '\n')
-	
-	print ("Google API Search")
-	startTime = datetime.now()
-	printGoogleAPIResults(qp)
-	print(datetime.now() - startTime, '\n')
+	print("Recommended Answer: " + getAnswer(qp))
 
-	openWindow(qp.unformattedQuestion)
+	# print ("Google API Search")
+	# startTime = datetime.now()
+	# printGoogleAPIResults(qp)
+	# print(datetime.now() - startTime, '\n')
 
-	t1 = HqThread()
+	# openWindow(qp.unformattedQuestion)
+
