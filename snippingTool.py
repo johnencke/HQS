@@ -8,9 +8,11 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 import tkinter as tk
 from PIL import ImageGrab
+from PIL import Image
 import numpy as np
 import cv2
 import questionParser
+import webbrowser
 import googleSearch as gs
 from datetime import datetime
 import threading
@@ -28,7 +30,6 @@ class HqThread(threading.Thread):
     def run(self):
         self.func(self.q)
         print(datetime.now() - self.startTime, '\n')
-
 
 class ScreenCapWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -74,6 +75,18 @@ class ScreenCapWidget(QtWidgets.QWidget):
         img.save('capture.png')
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
 
+#        cv2.imshow('Captured Image', img)
+#        cv2.waitKey(0)
+        #cv2.destroyAllWindows()
+        #q = questionParser.QuestionParser(Image.open("hq6.png"))
+        #print(q)
+        #googleSearch.makeQuery(q)
+        #newQ = q.question
+        #newQ = "+".join(newQ.split())
+        #newQ = newQ.replace("?", "")
+        #newQ = newQ.lower()
+        #print(newQ)
+
         q = questionParser.QuestionParser(img)
         if q.answers[2] != "Read Error":
             startTime = datetime.now()
@@ -92,7 +105,6 @@ class ScreenCapWidget(QtWidgets.QWidget):
         # t2.start()
         # t1.join()
         # t2.join()
-
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

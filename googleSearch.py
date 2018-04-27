@@ -42,9 +42,9 @@ def printHtmlParseResults(qp:QuestionParser):
 		print('Answer', i + 1, "Results: ", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
 
 
-"""
+'''
 Using Google's Custom Search API, it returns the number of results that each search yields
-"""
+'''
 def googleAPITotalResults(search_term, api_key = my_api_key, cse_id = my_cse_id):
 	service = build("customsearch", "v1", developerKey=api_key)
 	response = service.cse().list(q=search_term, cx=cse_id).execute()
@@ -87,6 +87,10 @@ def removeCommonWords(statement):
 	return keywords
 
 
+def openWindow(newQ):
+	webbrowser.open("http://google.com/search?q=" + newQ)
+
+
 if __name__ == "__main__":
 	startTime = datetime.now()
 	file = input('File: ')
@@ -105,3 +109,6 @@ if __name__ == "__main__":
 	# startTime = datetime.now()
 	# printGoogleAPIResults(qp)
 	# print(datetime.now() - startTime, '\n')
+
+	openWindow(qp.unformattedQuestion)
+

@@ -41,3 +41,9 @@ with the question and output that answer to the user.
 - https://pypi.python.org/pypi/pyscreenshot
 
 - https://medium.com/@LtHummus/building-the-ultimate-hq-bot-c8f89a120fe2
+
+- https://www.geeksforgeeks.org/implementing-web-scraping-python-beautiful-soup/
+
+- https://hackernoon.com/i-hacked-hq-trivia-but-heres-how-they-can-stop-me-68750ed16365
+
+- https://loonride.com/learn/blog/hq-bots
