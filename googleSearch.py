@@ -94,13 +94,9 @@ def openWindow(newQ):
 
 def getAnswer(qp:QuestionParser):
 	resultsDict = {}
-	print (qp.question)
-	print (qp.unformattedQuestion)
-	qp.unformattedQuestion = removeCommonWords(qp.question)
-	print (qp.unformattedQuestion)
-
+	newSearch = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0, 3):
-		resultsDict[qp.unformattedAnswers[i]] = htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i]))
+		resultsDict[qp.unformattedAnswers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
 	answer = (max(resultsDict.items(), key=operator.itemgetter(1))[0])
 	return answer
 
@@ -108,17 +104,17 @@ if __name__ == "__main__":
 	startTime = datetime.now()
 	file = input('File: ')
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
-	print(qp.unformattedQuestion)
-	print(qp.unformattedAnswers)
+	print('\nQuestion:' + qp.question)
+	for answer in qp.answers: print(answer)
 	print(datetime.now() - startTime, '\n')
 
-	print(removeCommonWords(qp.unformattedQuestion))
+	# print(removeCommonWords(qp.unformattedQuestion))
 
-	# print ("Parsing HTML")
-	# startTime = datetime.now()
-	# printHtmlParseResults(qp)
-	# print(datetime.now() - startTime, '\n')
-	# getAnswer(qp)
+	print ("Parsing HTML")
+	startTime = datetime.now()
+	printHtmlParseResults(qp)
+	print(datetime.now() - startTime, '\n')
+	print("Recommended Answer: " + getAnswer(qp))
 
 	# print ("Google API Search")
 	# startTime = datetime.now()
