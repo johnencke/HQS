@@ -35,7 +35,7 @@ Using HTML parsing, it returns number of results that the search yields
 def htmlParseTotalResults(url):
 	response = requests.get(url)
 	html = BeautifulSoup(response.text, 'lxml')
-	resultStatsString = html.find('div', id='resultStats').string
+	resultStatsString = int(html.find('div', id='resultStats').string.replace(',', '').replace('About ', '').replace(' results', ''))
 	return resultStatsString
 
 def printHtmlParseResults(qp:QuestionParser):
@@ -111,4 +111,4 @@ if __name__ == "__main__":
 	# printGoogleAPIResults(qp)
 	# print(datetime.now() - startTime, '\n')
 
-	openWindow(qp.unformattedQuestion)
+	# openWindow(qp.unformattedQuestion)
