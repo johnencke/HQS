@@ -80,7 +80,7 @@ def printGoogleAPIResults(qp:QuestionParser):
 def removeCommonWords(statement):
 	statement = statement[:-1]
 	statement = statement.lower().split()
-	resultWords = []
+	keywords = []
 	for i in range(0, len(statement)):
 		if statement[i] not in EXCLUDE_THESE: 
 			keywords += [statement[i]]
@@ -100,10 +100,10 @@ if __name__ == "__main__":
 	print(datetime.now() - startTime, '\n')
 
 	print(removeCommonWords(qp.question))
-	# print ("Parsing HTML")
-	# startTime = datetime.now()
-	# printHtmlParseResults(qp)
-	# print(datetime.now() - startTime, '\n')
+	print ("Parsing HTML")
+	startTime = datetime.now()
+	printHtmlParseResults(qp)
+	print(datetime.now() - startTime, '\n')
 	
 	# print ("Google API Search")
 	# startTime = datetime.now()
