@@ -19,7 +19,7 @@ my_cse_id4 = "002815009267709723541:epubpgzcgog"
 
 EXCLUDE_THESE = ["who", "what","where","when","of","and","that","have","for","why","the","on","with","as",
 "this","by","from","they","a","an","and","my","are","in","to","these","is","does","which","his","her","also",
-"have","it","we","means","you","comes","came","come","about","if","by","from","go",]
+"have","it","we","means","you","comes","came","come","about","if","by","from","go"]
 
 
 
