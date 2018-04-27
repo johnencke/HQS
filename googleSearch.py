@@ -52,8 +52,21 @@ def htmlParseTotalResults(url):
 
 def printHtmlParseResults(qp:QuestionParser):
 	newSearch = removeCommonWords(qp.unformattedQuestion)
+	results =  []
 	for i in range(0,3):
-		print('Answer', i + 1, "Results:", htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i])))
+		results += [htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))]
+	for i in range(0,3):
+		print(qp.answers[i], "Results:", results[i])
+
+	resultsDict = {}
+	for i in range(0, 3):
+		resultsDict[qp.answers[i]] = results[i]
+
+	if 'not' in newSearch:
+		print ('Recommended Answer: ' + min(resultsDict.items(), key=operator.itemgetter(1))[0])
+	else:
+		print ('Recommended Answer: ' + max(resultsDict.items(), key=operator.itemgetter(1))[0])
+
 
 
 '''
@@ -102,14 +115,6 @@ def removeCommonWords(question):
 def openWindow(newQ):
 	webbrowser.open("http://google.com/search?q=" + newQ)
 
-def getAnswer(qp:QuestionParser):
-	resultsDict = {}
-	newSearch = removeCommonWords(qp.unformattedQuestion)
-	for i in range(0, 3):
-		resultsDict[qp.answers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
-	if 'not' in newSearch:
-		return min(resultsDict.items(), key=operator.itemgetter(1))[0]
-	return max(resultsDict.items(), key=operator.itemgetter(1))[0]
 
 if __name__ == "__main__":
 	
@@ -126,7 +131,6 @@ if __name__ == "__main__":
 	print ("Parsing HTML")
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
-	print("Recommended Answer: " + getAnswer(qp))
 	print(datetime.now() - startTime, '\n')
 	
 	# print ("Google API Search")
