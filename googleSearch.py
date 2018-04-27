@@ -17,8 +17,9 @@ my_cse_id3 = '015426465276113101398:xj_pxu5xibw'
 my_api_key4 = "AIzaSyBr_1D-usLPDE50lQm0QVUnQqZ8qkEl6fg"
 my_cse_id4 = "002815009267709723541:epubpgzcgog"
 
-EXCLUDE_THESE = ['a', 'these','those', 'does', "also", "who", "what", "when", "where", "why", "how","for", "is", "was", "are", "isn't", "aren't", "wasn't", "will", "won't", \
-"where", "that", "there", "the", "an", "which", "of", "in"]
+EXCLUDE_THESE = ["who", "what","where","when","of","and","that","have","for","why","the","on","with","as",
+"this","by","from","they","a","an","and","my","are","in","to","these","is","does","which","his","her","also",
+"have","it","we","means","you","comes","came","come","about","if","by","from","go"]
 
 
 """
@@ -111,4 +112,3 @@ if __name__ == "__main__":
 	# print(datetime.now() - startTime, '\n')
 
 	openWindow(qp.unformattedQuestion)
-
