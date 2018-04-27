@@ -6,6 +6,7 @@ from PIL import Image
 import webbrowser
 from datetime import datetime
 import operator
+import threading
 
 my_api_key = 'AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ'
 my_cse_id = '015426465276113101398:etj8c0m8u_u' 	
@@ -24,7 +25,7 @@ EXCLUDE_THESE = ["who", "what","where","when","of","and","that","have","for","wh
 
 
 class HqThread(threading.Thread):
-    def __init__(self, q:questionParser.QuestionParser, func , startTime):
+    def __init__(self, q:QuestionParser, func , startTime):
         threading.Thread.__init__(self)
         self.q = q
         self.func = func
@@ -90,7 +91,6 @@ def printGoogleAPIResults(qp:QuestionParser):
 		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequencyAnswer, "Frequency of Question Keywords in Answer: ", frequencyQuestion)
 
 def removeCommonWords(statement:str):
-	statement = statement[:-1]
 	statement = statement.lower().split()
 	keywords = []
 	for i in range(0, len(statement)):
@@ -124,7 +124,9 @@ if __name__ == "__main__":
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
 	print(datetime.now() - startTime, '\n')
+	startTime = datetime.now()
 	print("Recommended Answer: " + getAnswer(qp))
+	print(datetime.now() - startTime, '\n')
 
 	# print ("Google API Search")
 	# startTime = datetime.now()
