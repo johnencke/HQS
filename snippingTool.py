@@ -4,7 +4,6 @@ Adapted from: https://github.com/harupy/snipping-tool
 
 '''
 
-
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 import tkinter as tk
@@ -13,10 +12,26 @@ from PIL import Image
 import numpy as np
 import cv2
 import questionParser
-import googleSearch
 import webbrowser
+import googleSearch as gs
+from datetime import datetime
+import threading
+import time
 
-class MyWidget(QtWidgets.QWidget):
+my_api_key = "AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ"
+my_cse_id = "015426465276113101398:etj8c0m8u_u"
+
+class HqThread(threading.Thread):
+    def __init__(self, q:questionParser.QuestionParser, func , startTime):
+        threading.Thread.__init__(self)
+        self.q = q
+        self.func = func
+        self.startTime = startTime
+    def run(self):
+        self.func(self.q)
+        print(datetime.now() - self.startTime, '\n')
+
+class ScreenCapWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         root = tk.Tk()
@@ -51,7 +66,6 @@ class MyWidget(QtWidgets.QWidget):
 
     def mouseReleaseEvent(self, event):
         self.close()
-
         x1 = min(self.begin.x(), self.end.x())
         y1 = min(self.begin.y(), self.end.y())
         x2 = max(self.begin.x(), self.end.x())
@@ -63,20 +77,38 @@ class MyWidget(QtWidgets.QWidget):
 
 #        cv2.imshow('Captured Image', img)
 #        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-        q = questionParser.QuestionParser(Image.open("hq6.png"))
-        print(q)
+        #cv2.destroyAllWindows()
+        #q = questionParser.QuestionParser(Image.open("hq6.png"))
+        #print(q)
         #googleSearch.makeQuery(q)
-        newQ = q.question
-        newQ = "+".join(newQ.split())
-        newQ = newQ.replace("?", "")
-        newQ = newQ.lower()
-        print(newQ)
-        webbrowser.open("http://google.com/search?q=" + newQ)
+        #newQ = q.question
+        #newQ = "+".join(newQ.split())
+        #newQ = newQ.replace("?", "")
+        #newQ = newQ.lower()
+        #print(newQ)
+
+        q = questionParser.QuestionParser(img)
+        if q.answers[2] != "Read Error":
+            startTime = datetime.now()
+            print(q, '\n')
+            gs.getResultsAlg(q)
+            print(datetime.now() - startTime, '\n')
+            startTime = datetime.now()
+            gs.googleAPIResultsAlg(q)
+            print(datetime.now() - startTime, '\n')
+
+
+        #Threading can be useful for executing all algorithms concurrently
+        # t1 = HqThread(q, gs.getResultsAlg, startTime)
+        # t2 = HqThread(q, gs.googleAPIResultsAlg, startTime)
+        # t1.start()
+        # t2.start()
+        # t1.join()
+        # t2.join()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    window = MyWidget()
+    window = ScreenCapWidget()
     window.show()
     app.aboutToQuit.connect(app.deleteLater)
     sys.exit(app.exec_())

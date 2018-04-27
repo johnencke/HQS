@@ -2,16 +2,24 @@ import os
 import sys
 import pytesseract
 from PIL import Image
-import time
+import string
 
 class QuestionParser:
-
-	def __init__(self, im):
+	'''Question Parser Object'''
+	def __init__(self, im:Image):
+		'''
+		Take in image 
+		'''
 		self.question = ''
 		self.answers = []
+		self.unformattedQuestion = ''
+		self.unformattedAnswers = ["", "", ""]
 		self.__parseText(im)
 
-	def __parseText(self, im):
+	def __parseText(self, im:Image):
+		'''
+		Private method that reads image using pytesserct and sets self.queston and self.answers
+		'''
 		text = pytesseract.image_to_string(im)
 		text = self.__correctReadErr(text)
 		splitText = text.split('\n')
@@ -33,14 +41,23 @@ class QuestionParser:
 					if splitText[i] != '' and self.question != '':
 						self.answers.append(splitText[i])
 		
-		while (len(self.answers)<=3):
+		while (len(self.answers) < 3):
 			self.answers.append("Read Error")
+		#Converts questions and answers to lowercase and removes punctuation
+		self.unformattedQuestion = self.question.lower().translate(str.maketrans(string.punctuation,"|"*len(string.punctuation)))
+		self.unformattedQuestion = self.unformattedQuestion.replace('|', '')
+
+		for i in range(0,3):
+			self.unformattedAnswers[i] = self.answers[i].lower().translate(str.maketrans(string.punctuation,"|"*len(string.punctuation)))
+			self.unformattedAnswers[i] = self.unformattedAnswers[i].replace('|', '')
 
 	def __str__(self):
+		'''To String method that prints the question and the three answers'''
 		return 'Question: ' + self.question + '\nAnswer 1: ' + self.answers[0] + '\nAnswer 2: ' + self.answers[1] + '\nAnswer 3: ' + self.answers[2]
 
 
 	def __correctReadErr(self, text):
+		'''Called in __parseText. Corrects common read errors from pytesseract'''
 		text = text.replace(u"\ufb01", "fi")
 		text = text.replace(u"\ufb02", "fl")
 		text = text.replace(u"\u201c", "\"")
@@ -49,3 +66,7 @@ class QuestionParser:
 		text = text.replace(u"\u2019", "\'")
 		return text
 
+if __name__ == "__main__":
+	parseMe = QuestionParser(Image.open('./exampleQuestions/hq5.png'))
+	print(parseMe.unformattedQuestion)
+	print(parseMe.unformattedAnswers)
