@@ -40,8 +40,9 @@ def htmlParseTotalResults(url):
 	return resultStatsString
 
 def printHtmlParseResults(qp:QuestionParser):
+	newSearch = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0,3):
-		print('Answer', i + 1, "Results:", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
+		print('Answer', i + 1, "Results:", htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i])))
 
 
 '''
@@ -68,10 +69,10 @@ def getFrequency(response, answer):
 		return -1
 
 def printGoogleAPIResults(qp:QuestionParser):
-	keywords = removeCommonWords(qp.question.lower())
+	keywords = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0, 3):
-		results = googleAPITotalResults(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])
-		questionResponse = googleAPIResponse(qp.unformattedQuestion)
+		results = googleAPITotalResults(keywords + ' ' + qp.unformattedAnswers[i])
+		questionResponse = googleAPIResponse(keywords)
 		frequencyAnswer = getFrequency(questionResponse, qp.answers[i].lower())
 		answerResponse = googleAPIResponse(qp.unformattedAnswers[i])
 		frequencyQuestion = 0
@@ -79,13 +80,12 @@ def printGoogleAPIResults(qp:QuestionParser):
 			frequencyQuestion += getFrequency(answerResponse, word)
 		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequencyAnswer, "Frequency of Question Keywords in Answer: ", frequencyQuestion)
 
-def removeCommonWords(statement):
-	# statement = statement[:-1]
-	statement = statement.split()
+def removeCommonWords(question):
+	question = question.split()
 	keywords = []
-	for i in range(0, len(statement)):
-		if statement[i] not in EXCLUDE_THESE: 
-			keywords += [statement[i]]
+	for i in range(0, len(question)):
+		if question[i] not in EXCLUDE_THESE: 
+			keywords += [question[i]]
 	return ' '.join(keywords)
 
 
@@ -96,7 +96,7 @@ def getAnswer(qp:QuestionParser):
 	resultsDict = {}
 	newSearch = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0, 3):
-		resultsDict[qp.unformattedAnswers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
+		resultsDict[qp.answers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
 	answer = (max(resultsDict.items(), key=operator.itemgetter(1))[0])
 	return answer
 
@@ -104,11 +104,10 @@ if __name__ == "__main__":
 	startTime = datetime.now()
 	file = input('File: ')
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
-	print('\nQuestion:' + qp.question)
+	print('\nQuestion:\n' + qp.question)
+	print()
 	for answer in qp.answers: print(answer)
-	print(datetime.now() - startTime, '\n')
-
-	# print(removeCommonWords(qp.unformattedQuestion))
+	print('------\n', (datetime.now() - startTime), '\n------')
 
 	print ("Parsing HTML")
 	startTime = datetime.now()
