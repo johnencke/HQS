@@ -40,7 +40,7 @@ def htmlParseTotalResults(url):
 
 def printHtmlParseResults(qp:QuestionParser):
 	for i in range(0,3):
-		print('Answer', i + 1, "Results: ", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
+		print('Answer', i + 1, "Results:", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
 
 
 '''
@@ -101,10 +101,10 @@ if __name__ == "__main__":
 	print(datetime.now() - startTime, '\n')
 
 	print(removeCommonWords(qp.question))
-	# print ("Parsing HTML")
-	# startTime = datetime.now()
-	# printHtmlParseResults(qp)
-	# print(datetime.now() - startTime, '\n')
+	print ("Parsing HTML")
+	startTime = datetime.now()
+	printHtmlParseResults(qp)
+	print(datetime.now() - startTime, '\n')
 	
 	# print ("Google API Search")
 	# startTime = datetime.now()
