@@ -17,8 +17,8 @@ my_cse_id3 = '015426465276113101398:xj_pxu5xibw'
 my_api_key4 = "AIzaSyBr_1D-usLPDE50lQm0QVUnQqZ8qkEl6fg"
 my_cse_id4 = "002815009267709723541:epubpgzcgog"
 
-EXCLUDE_THESE = ['these','those', 'does', "also", "who", "what", "when", "where", "why", "how","for", "is", "was", "are", "isn't", "aren't", "wasn't", "will", "won't", \
-"where", "that", "there", "the", "a", "an", "which", "of", "A", "in"]
+EXCLUDE_THESE = ['a', 'these','those', 'does', "also", "who", "what", "when", "where", "why", "how","for", "is", "was", "are", "isn't", "aren't", "wasn't", "will", "won't", \
+"where", "that", "there", "the", "an", "which", "of", "in"]
 
 
 """
@@ -79,13 +79,12 @@ def printGoogleAPIResults(qp:QuestionParser):
 
 def removeCommonWords(statement):
 	statement = statement[:-1]
-	statement = statement.split(" ")
-	print (statement)
-	for word in statement:
-		if word in EXCLUDE_THESE:
-			statement.remove(word)
-	print(statement)
-	return statement
+	statement = statement.lower().split()
+	resultWords = []
+	for i in range(0, len(statement)):
+		if statement[i] not in EXCLUDE_THESE: 
+			keywords += [statement[i]]
+	return keywords
 
 
 if __name__ == "__main__":
@@ -96,12 +95,13 @@ if __name__ == "__main__":
 	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
 
-	print ("Parsing HTML")
-	startTime = datetime.now()
-	printHtmlParseResults(qp)
-	print(datetime.now() - startTime, '\n')
+	print(removeCommonWords(qp.question))
+	# print ("Parsing HTML")
+	# startTime = datetime.now()
+	# printHtmlParseResults(qp)
+	# print(datetime.now() - startTime, '\n')
 	
-	print ("Google API Search")
-	startTime = datetime.now()
-	printGoogleAPIResults(qp)
-	print(datetime.now() - startTime, '\n')
+	# print ("Google API Search")
+	# startTime = datetime.now()
+	# printGoogleAPIResults(qp)
+	# print(datetime.now() - startTime, '\n')
