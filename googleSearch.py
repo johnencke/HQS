@@ -5,6 +5,8 @@ from questionParser import QuestionParser
 from PIL import Image
 import webbrowser
 from datetime import datetime
+import operator
+import threading
 
 my_api_key = 'AIzaSyClRm3OS-OCShRJu6W4FJ_PhpUbDOHTMkQ'
 my_cse_id = '015426465276113101398:etj8c0m8u_u' 	
@@ -17,9 +19,20 @@ my_cse_id3 = '015426465276113101398:xj_pxu5xibw'
 my_api_key4 = "AIzaSyBr_1D-usLPDE50lQm0QVUnQqZ8qkEl6fg"
 my_cse_id4 = "002815009267709723541:epubpgzcgog"
 
-EXCLUDE_THESE = ['a', 'these','those', 'does', "also", "who", "what", "when", "where", "why", "how","for", "is", "was", "are", "isn't", "aren't", "wasn't", "will", "won't", \
-"where", "that", "there", "the", "an", "which", "of", "in"]
+EXCLUDE_THESE = ["who", "what","where","when","of","and","that","have","for","why","the","on","with","as",
+"this","by","from","they","a","an","and","my","are","in","to","these","is","does","which","his","her","also",
+"have","it","we","means","you","comes","came","come","about","if","by","from","go"]
 
+
+class HqThread(threading.Thread):
+    def __init__(self, q:QuestionParser, func , startTime):
+        threading.Thread.__init__(self)
+        self.q = q
+        self.func = func
+        self.startTime = startTime
+    def run(self):
+        self.func(self.q)
+        print(datetime.now() - self.startTime, '\n')
 
 """
 Generates and returns URL based on the search query
@@ -34,12 +47,13 @@ Using HTML parsing, it returns number of results that the search yields
 def htmlParseTotalResults(url):
 	response = requests.get(url)
 	html = BeautifulSoup(response.text, 'lxml')
-	resultStatsString = html.find('div', id='resultStats').string
+	resultStatsString = int(html.find('div', id='resultStats').string.replace(',', '').replace('About ', '').replace(' results', ''))
 	return resultStatsString
 
 def printHtmlParseResults(qp:QuestionParser):
+	newSearch = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0,3):
-		print('Answer', i + 1, "Results: ", htmlParseTotalResults(makeURL(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])))
+		print('Answer', i + 1, "Results:", htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i])))
 
 
 '''
@@ -66,10 +80,10 @@ def getFrequency(response, answer):
 		return -1
 
 def printGoogleAPIResults(qp:QuestionParser):
-	keywords = removeCommonWords(qp.question.lower())
+	keywords = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0, 3):
-		results = googleAPITotalResults(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])
-		questionResponse = googleAPIResponse(qp.unformattedQuestion)
+		results = googleAPITotalResults(keywords + ' ' + qp.unformattedAnswers[i])
+		questionResponse = googleAPIResponse(keywords)
 		frequencyAnswer = getFrequency(questionResponse, qp.answers[i].lower())
 		answerResponse = googleAPIResponse(qp.unformattedAnswers[i])
 		frequencyQuestion = 0
@@ -77,32 +91,42 @@ def printGoogleAPIResults(qp:QuestionParser):
 			frequencyQuestion += getFrequency(answerResponse, word)
 		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequencyAnswer, "Frequency of Question Keywords in Answer: ", frequencyQuestion)
 
-def removeCommonWords(statement):
-	statement = statement[:-1]
-	statement = statement.lower().split()
+def removeCommonWords(question):
+	question = question.split()
 	keywords = []
-	for i in range(0, len(statement)):
-		if statement[i] not in EXCLUDE_THESE: 
-			keywords += [statement[i]]
-	return keywords
-
+	for i in range(0, len(question)):
+		if question[i] not in EXCLUDE_THESE: 
+			keywords += [question[i]]
+	return ' '.join(keywords)
 
 def openWindow(newQ):
 	webbrowser.open("http://google.com/search?q=" + newQ)
 
+def getAnswer(qp:QuestionParser):
+	resultsDict = {}
+	newSearch = removeCommonWords(qp.unformattedQuestion)
+	for i in range(0, 3):
+		resultsDict[qp.answers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
+	if 'not' in newSearch:
+		return min(resultsDict.items(), key=operator.itemgetter(1))[0]
+	return max(resultsDict.items(), key=operator.itemgetter(1))[0]
 
 if __name__ == "__main__":
-	startTime = datetime.now()
+	
 	file = input('File: ')
+	
+	startTime = datetime.now()
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
-	print(qp.unformattedQuestion)
-	print(qp.unformattedAnswers)
-	print(datetime.now() - startTime, '\n')
+	print(qp)
 
-	print(removeCommonWords(qp.question))
+
+	print('------\n', (datetime.now() - startTime), '\n------')
+
+
 	print ("Parsing HTML")
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
+	print("Recommended Answer: " + getAnswer(qp))
 	print(datetime.now() - startTime, '\n')
 	
 	# print ("Google API Search")
@@ -110,5 +134,5 @@ if __name__ == "__main__":
 	# printGoogleAPIResults(qp)
 	# print(datetime.now() - startTime, '\n')
 
-	openWindow(qp.unformattedQuestion)
+	# openWindow(qp.unformattedQuestion)
 
