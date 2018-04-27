@@ -22,6 +22,16 @@ EXCLUDE_THESE = ["who", "what","where","when","of","and","that","have","for","wh
 "have","it","we","means","you","comes","came","come","about","if","by","from","go"]
 
 
+class HqThread(threading.Thread):
+    def __init__(self, q:questionParser.QuestionParser, func , startTime):
+        threading.Thread.__init__(self)
+        self.q = q
+        self.func = func
+        self.startTime = startTime
+    def run(self):
+        self.func(self.q)
+        print(datetime.now() - self.startTime, '\n')
+
 """
 Generates and returns URL based on the search query
 """
@@ -46,13 +56,13 @@ def printHtmlParseResults(qp:QuestionParser):
 '''
 Using Google's Custom Search API, it returns the number of results that each search yields
 '''
-def googleAPITotalResults(search_term, api_key = my_api_key, cse_id = my_cse_id):
+def googleAPITotalResults(search_term, api_key = my_api_key2, cse_id = my_cse_id2):
 	service = build("customsearch", "v1", developerKey=api_key)
 	response = service.cse().list(q=search_term, cx=cse_id).execute()
 	totalResults = response['searchInformation']['totalResults']
 	return totalResults
 
-def googleAPIResponse(search_term, api_key = my_api_key, cse_id = my_cse_id):
+def googleAPIResponse(search_term, api_key = my_api_key2, cse_id = my_cse_id2):
 	service = build("customsearch", "v1", developerKey=api_key)
 	return service.cse().list(q=search_term, cx=cse_id).execute()
 
@@ -78,7 +88,7 @@ def printGoogleAPIResults(qp:QuestionParser):
 			frequencyQuestion += getFrequency(answerResponse, word)
 		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequencyAnswer, "Frequency of Question Keywords in Answer: ", frequencyQuestion)
 
-def removeCommonWords(statement):
+def removeCommonWords(statement:str):
 	statement = statement[:-1]
 	statement = statement.lower().split()
 	keywords = []
@@ -93,22 +103,24 @@ def openWindow(newQ):
 
 
 if __name__ == "__main__":
-	startTime = datetime.now()
 	file = input('File: ')
+	startTime = datetime.now()
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
 	print(qp.unformattedQuestion)
 	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
 
-	print(removeCommonWords(qp.question))
-	# print ("Parsing HTML")
-	# startTime = datetime.now()
-	# printHtmlParseResults(qp)
-	# print(datetime.now() - startTime, '\n')
+
+	print ("Parsing HTML")
+	startTime = datetime.now()
+	printHtmlParseResults(qp)
+	print(datetime.now() - startTime, '\n')
 	
-	# print ("Google API Search")
-	# startTime = datetime.now()
-	# printGoogleAPIResults(qp)
-	# print(datetime.now() - startTime, '\n')
+	print ("Google API Search")
+	startTime = datetime.now()
+	printGoogleAPIResults(qp)
+	print(datetime.now() - startTime, '\n')
 
 	openWindow(qp.unformattedQuestion)
+
+	t1 = HqThread()
