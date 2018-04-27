@@ -17,6 +17,9 @@ my_cse_id3 = '015426465276113101398:xj_pxu5xibw'
 my_api_key4 = "AIzaSyBr_1D-usLPDE50lQm0QVUnQqZ8qkEl6fg"
 my_cse_id4 = "002815009267709723541:epubpgzcgog"
 
+EXCLUDE_THESE = ['these','those', 'does', "also", "who", "what", "when", "where", "why", "how","for", "is", "was", "are", "isn't", "aren't", "wasn't", "will", "won't", \
+"where", "that", "there", "the", "a", "an", "which", "of", "A", "in"]
+
 
 """
 Generates and returns URL based on the search query
@@ -67,18 +70,19 @@ def printGoogleAPIResults(qp:QuestionParser):
 	for i in range(0, 3):
 		results = googleAPITotalResults(qp.unformattedQuestion + ' ' + qp.unformattedAnswers[i])
 		questionResponse = googleAPIResponse(qp.unformattedQuestion)
-		frequency1 = getFrequency(questionResponse, qp.answers[i].lower())
+		frequencyAnswer = getFrequency(questionResponse, qp.answers[i].lower())
 		answerResponse = googleAPIResponse(qp.unformattedAnswers[i])
-		frequency2 = 0
+		frequencyQuestion = 0
 		for word in keywords:
-			frequency2 += getFrequency(answerResponse, word)
-		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequency1, "Frequency of Question Keywords in Answer: ", frequency2)
+			frequencyQuestion += getFrequency(answerResponse, word)
+		print('Answer', i + 1, "Results: ", results, "Frequency of Answer in Question: ", frequencyAnswer, "Frequency of Question Keywords in Answer: ", frequencyQuestion)
 
 def removeCommonWords(statement):
 	statement = statement[:-1]
 	statement = statement.split(" ")
+	print (statement)
 	for word in statement:
-		if word in ['these','those', 'does', "also", "who", "what", "when", "where", "why", "how","for", "is", "was", "are", "isn\'t", "aren\'t", "wasn\'t", "will", "won\'t", "where", "that", "there", "the", "a", "an", "which", "of"]:
+		if word in EXCLUDE_THESE:
 			statement.remove(word)
 	print(statement)
 	return statement
@@ -89,7 +93,7 @@ def removeCommonWords(statement):
 if __name__ == "__main__":
 	startTime = datetime.now()
 	file = input('File: ')
-	qp = QuestionParser(Image.open("exampleQuestions/" + file + ".png"))
+	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
 	print(qp.unformattedQuestion)
 	print(qp.unformattedAnswers)
 	print(datetime.now() - startTime, '\n')
