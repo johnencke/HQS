@@ -133,7 +133,6 @@ if __name__ == "__main__":
 	print ("Parsing HTML")
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
-	# print("Recommended Answer: " + getAnswer(qp))
 	print(datetime.now() - startTime, '\n')
 
 	# print ("Google API Search")
