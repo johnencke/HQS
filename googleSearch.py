@@ -59,13 +59,13 @@ def printHtmlParseResults(qp:QuestionParser):
 '''
 Using Google's Custom Search API, it returns the number of results that each search yields
 '''
-def googleAPITotalResults(search_term, api_key = my_api_key2, cse_id = my_cse_id2):
+def googleAPITotalResults(search_term, api_key = my_api_key, cse_id = my_cse_id):
 	service = build("customsearch", "v1", developerKey=api_key)
 	response = service.cse().list(q=search_term, cx=cse_id).execute()
 	totalResults = response['searchInformation']['totalResults']
 	return totalResults
 
-def googleAPIResponse(search_term, api_key = my_api_key2, cse_id = my_cse_id2):
+def googleAPIResponse(search_term, api_key = my_api_key, cse_id = my_cse_id):
 	service = build("customsearch", "v1", developerKey=api_key)
 	return service.cse().list(q=search_term, cx=cse_id).execute()
 
@@ -109,22 +109,25 @@ def getAnswer(qp:QuestionParser):
 	newSearch = removeCommonWords(qp.unformattedQuestion)
 	for i in range(0, 3):
 		resultsDict[qp.answers[i]] = htmlParseTotalResults(makeURL(newSearch + ' ' + qp.unformattedAnswers[i]))
-	answer = (max(resultsDict.items(), key=operator.itemgetter(1))[0])
-	return answer
+	if 'not' in newSearch:
+		return min(resultsDict.items(), key=operator.itemgetter(1))[0]
+	return max(resultsDict.items(), key=operator.itemgetter(1))[0]
 
 if __name__ == "__main__":
+	
 	file = input('File: ')
+	
 	startTime = datetime.now()
 	qp = QuestionParser(Image.open("4_25_2018/" + file + ".png"))
 	print(qp)
 
+
 	print('------\n', (datetime.now() - startTime), '\n------')
+
 
 	print ("Parsing HTML")
 	startTime = datetime.now()
 	printHtmlParseResults(qp)
-	print(datetime.now() - startTime, '\n')
-	startTime = datetime.now()
 	print("Recommended Answer: " + getAnswer(qp))
 	print(datetime.now() - startTime, '\n')
 
