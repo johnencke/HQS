@@ -89,14 +89,13 @@ class ScreenCapWidget(QtWidgets.QWidget):
 
         q = questionParser.QuestionParser(img)
         if q.answers[2] != "Read Error":
+            print(q)
+            #print('------\n', (datetime.now() - startTime), '\n------')
+            #print ("Parsing HTML")
             startTime = datetime.now()
-            print(q, '\n')
-            gs.getResultsAlg(q)
+            #gs.openWindow(q.unformattedQuestion)
+            gs.printHtmlParseResults(q)
             print(datetime.now() - startTime, '\n')
-            startTime = datetime.now()
-            gs.googleAPIResultsAlg(q)
-            print(datetime.now() - startTime, '\n')
-
 
         #Threading can be useful for executing all algorithms concurrently
         # t1 = HqThread(q, gs.getResultsAlg, startTime)
